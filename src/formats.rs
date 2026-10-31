@@ -113,10 +113,8 @@ fn check_date(s: &str) -> Result<(), Box<dyn Error>> {
                 Err(format!("february has {feb_days} days only"))?;
             }
         }
-        4 | 6 | 9 | 11 => {
-            if d > 30 {
-                Err("month has 30 days only")?;
-            }
+        4 | 6 | 9 | 11 if d > 30 => {
+            Err("month has 30 days only")?;
         }
         _ => {}
     }

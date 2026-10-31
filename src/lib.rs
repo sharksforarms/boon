@@ -151,7 +151,7 @@ impl Schemas {
     }
 
     fn insert(&mut self, locs: Vec<UrlPtr>, compiled: Vec<Schema>) {
-        for (up, sch) in locs.into_iter().zip(compiled.into_iter()) {
+        for (up, sch) in locs.into_iter().zip(compiled) {
             let i = self.list.len();
             self.list.push(sch);
             self.map.insert(up, i);

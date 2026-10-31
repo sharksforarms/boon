@@ -949,6 +949,7 @@ impl<'v> Uneval<'v> {
                 }
             }
             Value::Array(arr) => {
+                #[allow(clippy::collapsible_match)]
                 if !sch.all_items_evaluated
                     && (caller_needs || sch.unevaluated_items.is_some())
                     && sch.num_items_evaluated < arr.len()

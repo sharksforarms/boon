@@ -201,12 +201,9 @@ impl<'a, 'v, 's> Iterator for DfsIterator<'a, 'v, 's> {
 
     fn next(&mut self) -> Option<Self::Item> {
         let Some(mut frame) = self.stack.pop() else {
-            if let Some(err) = self.root.take() {
-                self.stack.push(Frame::from(err));
-                return Some(DfsItem::Pre(err));
-            } else {
-                return None;
-            }
+            let err = self.root.take()?;
+            self.stack.push(Frame::from(err));
+            return Some(DfsItem::Pre(err));
         };
 
         if frame.causes.is_empty() {
