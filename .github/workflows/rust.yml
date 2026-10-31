@@ -9,27 +9,17 @@ jobs:
         os: [ubuntu-latest, windows-latest]
     steps:
     - name: install rust
-      uses: actions-rs/toolchain@v1
+      uses: dtolnay/rust-toolchain@stable
       with:
-        profile: minimal
-        toolchain: stable
-        override: true
+          components: rustfmt clippy
     - name: checkout repo
       uses: actions/checkout@v3
       with:
         submodules: true
-    - name: install rustfmt clippy
-      run: rustup component add rustfmt clippy
     - name: check formatting
-      uses: actions-rs/cargo@v1
-      with:
-        command: fmt
-        args: --all -- --check
+      run: cargo fmt --all -- --check
     - name: check linting
-      uses: actions-rs/cargo@v1
-      with:
-        command: clippy
-        args: --all-targets --all-features -- -D warnings
+      run: cargo clippy --all-targets --all-features -- -D warnings
     - name: install cargo-llvm-cov
       uses: taiki-e/install-action@cargo-llvm-cov
     - name: run tests
@@ -46,25 +36,20 @@ jobs:
       env:
         RUSTFLAGS: -D warnings
     - name: check cli formatting
-      uses: actions-rs/cargo@v1
-      with:
-        command: fmt
-        args: --manifest-path=cli/Cargo.toml --all -- --check
+      run: cargo fmt --manifest-path=cli/Cargo.toml --all -- --check
     - name: check cli linting
-      uses: actions-rs/cargo@v1
-      with:
-        command: clippy
-        args: --manifest-path=cli/Cargo.toml --all-targets --all-features -- -D warnings
+      run: cargo clippy --manifest-path=cli/Cargo.toml --all-targets --all-features -- -D warnings
       
   wasm:
     runs-on: ubuntu-latest
     steps:
+    - name: install rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: wasm32-unknown-emscripten
     - name: checkout repo
       uses: actions/checkout@v3
       with:
         submodules: true
-    - uses: actions-rust-lang/setup-rust-toolchain@v1
-      with:
-        target: wasm32-unknown-emscripten
     - name: Check
       run: cargo check --target wasm32-unknown-emscripten
